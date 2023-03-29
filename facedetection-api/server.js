@@ -1,4 +1,6 @@
 const express = require('express');
+const bcrypt = require('bcrypt-nodejs');
+const cors = require('cors');
 
 const app = express();
 
@@ -28,6 +30,8 @@ const database = {
     }
 }
 
+app.use(cors());
+
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
@@ -36,6 +40,11 @@ app.get('/', (req, res) => {
 })
 
 app.post('/signin', (req, res) => {
+
+    bcrypt.compare("bacon", hash, function(err, res) {
+        // res == true
+    });
+
     if (req.body.email === database.users[0].email && 
         req.body.password === database.users[0].password)
         res.json('signed in');

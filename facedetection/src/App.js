@@ -32,6 +32,12 @@ class App extends Component {
     }
   }
 
+  componentDidMount() {
+    fetch('http://localhost:3000')
+      .then(response => response.json())
+      .then(console.log)
+  }
+
   calculateFaceLocation = (data) => {
     const obj = JSON.parse(data);
     const clarifaiFace = obj.outputs[0].data.regions[0].region_info.bounding_box;
