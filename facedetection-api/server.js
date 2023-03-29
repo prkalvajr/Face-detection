@@ -20,7 +20,12 @@ const database = {
             entries: 0,
             joined: new Date()
         }
-    ]
+    ],
+    login: {
+        id: '987',
+        hash: '',
+        email: 'test@gmail.com'
+    }
 }
 
 app.use(express.urlencoded({extended: false}));
@@ -40,13 +45,60 @@ app.post('/signin', (req, res) => {
 
 app.post('register', (req, res) => {
     const {email, name, password} = req.body;
-    database.users.push({
-        name:  name,
-        email: email,
-        password: password
-    })
+
+    bcrypt.hash(password, null, null, function(err, hash) {
+        database.users.push({
+            name:  name,
+            email: email,
+            password: hash
+        })
+    });   
+
     res.json(name + ' Registered');
 })
+
+app.get('/profile/:id', (req, res) => {
+    const { id } = req.params;
+    const found = false;
+
+    database.users.forEach(user => {
+        if (user.id === id) 
+        {
+            found = true;
+            res.json(user);
+        }
+    })
+
+    if (!found)
+        res.status(404).json('User not found')
+})
+
+app.post('/image', (req, res) => {
+    const { id } = req.body;
+    const found = false;
+
+    database.users.forEach(user => {
+        if (user.id === id) 
+        {
+            found = true;
+            user.entries ++
+            res.json(user.entries);
+        }
+    })
+
+    if (!found)
+        res.status(404).json('User not found')
+})
+
+
+/*
+// Load hash from your password DB.
+bcrypt.compare("bacon", hash, function(err, res) {
+    // res == true
+});
+bcrypt.compare("veggies", hash, function(err, res) {
+    // res = false
+}); */
 
 app.listen(3000, () => {
     console.log("app running on por 3000");
