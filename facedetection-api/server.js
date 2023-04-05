@@ -36,7 +36,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.send("gettin root");
+    res.send(database.users);
 })
 
 app.post('/signin', (req, res) => {
@@ -52,8 +52,8 @@ app.post('/signin', (req, res) => {
         res.json('Error authentication');
 })
 
-app.post('register', (req, res) => {
-    const {email, name, password} = req.body;
+app.post('/register', (req, res) => {
+    const {email, name, password} = req.body;  
 
     bcrypt.hash(password, null, null, function(err, hash) {
         database.users.push({
@@ -61,8 +61,7 @@ app.post('register', (req, res) => {
             email: email,
             password: hash
         })
-    });   
-
+    }); 
     res.json(name + ' Registered');
 })
 
