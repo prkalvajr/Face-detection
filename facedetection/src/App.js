@@ -74,6 +74,17 @@ class App extends Component {
     this.setState({box})
   }
 
+  updateEntries = () => {
+    debugger;
+    fetch('http://localhost:3000/image', {
+      method: 'put',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({id: this.state.user.id})
+    }).then(response => response.json())
+    .then(count => { this.setState(Object.assign(this.state.user, {entries: count})) 
+  });
+  }
+
   onInputChange = (event) => {
     this.setState({ input: event.target.value })
   }
@@ -109,6 +120,7 @@ class App extends Component {
   fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
       .then(response => response.text())
       .then(result => this.displayFaceBox(this.calculateFaceLocation(result)))
+      .then(this.updateEntries())
       .catch(error => console.log('error', error));
   }
 

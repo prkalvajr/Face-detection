@@ -79,7 +79,7 @@ app.get('/profile/:id', (req, res) => {
         res.status(404).json('User not found')
 })
 
-app.post('/image', (req, res) => {
+app.put('/image', (req, res) => {
     const { id } = req.body;
     const found = false;
 
