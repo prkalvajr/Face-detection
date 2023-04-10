@@ -1,7 +1,25 @@
 const express = require('express');
 const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors');
+const knex = require('knex');
 
+const db = knex({
+    client: 'pg',
+    connection: {
+      host : '127.0.0.1',
+      port : 3306,
+      user : 'faceDetection',
+      password : '',
+      database : 'smartbrain'
+    }
+  });
+
+/*const pg = require('knex')({
+    client: 'pg',
+    connection: process.env.PG_CONNECTION_STRING,
+    searchPath: ['knex', 'public'],
+  }); */
+  
 const app = express();
 
 const database = {
