@@ -70,48 +70,47 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
     const {email, name, password} = req.body;  
-
-    bcrypt.hash(password, null, null, function(err, hash) {
-        database.users.push({
-            name:  name,
+    bcrypt.hash(password, null, null, function(err, hash) 
+    {
+        db('users')
+         .returning('*')
+         .insert({
             email: email,
-            password: hash
-        })
+            name: name,
+            joined: new Date()
+        }).then(user => {
+            res.json(user[0]);
+        }).catch(err => res.status(400).json('unable to register'))
+
     }); 
-    res.json(name + ' Registered');
+    
 })
 
 app.get('/profile/:id', (req, res) => {
     const { id } = req.params;
-    const found = false;
 
-    database.users.forEach(user => {
-        if (user.id === id) 
-        {
-            found = true;
-            res.json(user);
-        }
+    db.select('*').from('users').where({ id: id })
+    .then(user => {
+        if(user.length) {
+            res.json(user[0])
+        } else {
+            res.status(400).json('Not found!')
+        }        
     })
-
-    if (!found)
-        res.status(404).json('User not found')
+    .catch(err => res.status(400).json('Error getting user'))
 })
 
 app.put('/image', (req, res) => {
     const { id } = req.body;
-    const found = false;
 
-    database.users.forEach(user => {
-        if (user.id === id) 
-        {
-            found = true;
-            user.entries ++
-            res.json(user.entries);
-        }
+    db('users').where('id', '=', id)
+    .increment('entries', '')
+    .returning('entries')
+    .then(entries => {
+        res.json(entries[0].entries);
     })
+    .catch(err => res.status(400).json('unable to increment entries'))
 
-    if (!found)
-        res.status(404).json('User not found')
 })
 
 
