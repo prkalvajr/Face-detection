@@ -7,18 +7,12 @@ const db = knex({
     client: 'pg',
     connection: {
         host: '127.0.0.1',
-        port: 3306,
-        user: 'faceDetection',
-        password: '',
-        database: 'smartbrain'
+        port: 5432,
+        user: 'postgres',
+        password: '123456',
+        database: 'postgres'
     }
 });
-
-/*const pg = require('knex')({
-    client: 'pg',
-    connection: process.env.PG_CONNECTION_STRING,
-    searchPath: ['knex', 'public'],
-  }); */
 
 const app = express();
 
@@ -30,7 +24,11 @@ app.use(express.urlencoded({
 app.use(express.json());
 
 app.get('/', (req, res) => {
-})
+    db.select('email', 'hash').from('login')
+    .then(data => res.json(data))
+    .catch(err => res.status(400).json(err))
+
+    })
 
 app.post('/signin', (req, res) => {
     db.select('email', 'hash').from('login')
@@ -111,15 +109,6 @@ app.put('/image', (req, res) => {
 
 })
 
-
-/*
-// Load hash from your password DB.
-bcrypt.compare("bacon", hash, function(err, res) {
-    // res == true
-});
-bcrypt.compare("veggies", hash, function(err, res) {
-    // res = false
-}); */
 
 app.listen(3000, () => {
     console.log("app running on por 3000");
