@@ -75,7 +75,6 @@ class App extends Component {
   }
 
   updateEntries = () => {
-    debugger;
     fetch('http://localhost:3000/image', {
       method: 'put',
       headers: {'Content-Type': 'application/json'},
@@ -136,7 +135,7 @@ class App extends Component {
     const { isSignedIn, box, imageUrl, route } = this.state;
     return (
     <div className="App">
-      <ParticlesBg className='particles' num={200} type="tadpole" bg={true} />
+      <ParticlesBg className='particles' num={6} type="circle" bg={true} />
       <Navigation isSignedIn={isSignedIn} onRouteChange={this.onRouteChange} />
       {route === 'home' 
       ? <div> 
